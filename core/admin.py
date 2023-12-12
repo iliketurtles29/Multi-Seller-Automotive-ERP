@@ -29,7 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
         return qs
     
     inlines = [ProductImagesAdmin]
-    list_display = ['title', 'product_image', 'price', 'category', 'stock_count','vendor', 'featured', 'product_status']
+    list_display = ['title', 'product_image', 'price', 'category', 'stock_count', 'product_status']
     # list_editable = ['product_status', 'price', 'stock_count']
     readonly_fields = ['user', 'vendor', 'pid', 'date', 'updated' , 'sold_item' , 'total_product_sale']
 
