@@ -26,18 +26,14 @@ Admin Dashboard AppSeed.com
 
 ## Preview
 
-Provide instructions and examples for use. Include screenshots as needed.
 
-To add a screenshot, create an `assets/images` folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
+    ![alt text](static\assets\css\images\1.png)
+    ![alt text](static\assets\css\images\2.png)
+    ![alt text](static\assets\css\images\3.png)
+    ![alt text](static\assets\css\images\4.png)
+    ![alt text](static\assets\css\images\5.png)
+    ![alt text](static\assets\css\images\6.png)
 
-    ```md
-    ![alt text](md/1.png)
-    ![alt text](md/2.png)
-    ![alt text](md/3.png)
-    ![alt text](md/4.png)
-    ![alt text](md/5.png)
-    ![alt text](md/6.png)
-    ```
 
 ## Features
 
