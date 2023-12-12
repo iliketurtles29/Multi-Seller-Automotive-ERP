@@ -26,13 +26,9 @@ Admin Dashboard AppSeed.com
 
 ## Preview
 
-   
- ![alt text](assests/images/1.png)
-    ![alt text](assests/images/2.png)
-    ![alt text](assests/images/3.png)
-    ![alt text](assests/images/4.png)
-    ![alt text](assests/images/5.png)
-    ![alt text](assests/images/6.png)
+   <img src="assests/images/1.png" width="500"> <img src="assests/images/2.png" width="500"> <img src="assests/images/3.png" width="500"> <img src="assests/images/4.png" width="500"> <img src="assests/images/5.png" width="500"> <img src="assests/images/6.png" width="500">
+
+
   
 
 
