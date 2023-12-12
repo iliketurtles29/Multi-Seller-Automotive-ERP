@@ -1,4 +1,4 @@
-# Multi-Seller-ERP
+# Multi Seller ERP
 # <Your-Project-Title>
 
 ## Description
