@@ -6,10 +6,6 @@
 - Third year Information Technology 1st Semester Project
 - Developed using Python - Django Framework, SQLite3, HTML-CSS-JavaScript.
 
-## Installation
-
-just run python manage.py runserver
-
 ## Credits
 
 Admin Dashboard appseed.us
