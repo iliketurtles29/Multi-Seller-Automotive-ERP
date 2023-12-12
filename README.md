@@ -12,8 +12,7 @@ just run python manage.py runserver
 
 ## Credits
 
-Admin Dashboard !AppSeed.com 
-vious sections are the bare minimum, and your project will ultimately determine the content of this document. You might also want to consider adding the following sections.
+Admin Dashboard AppSeed.com 
 
 ## Developed using 
 
