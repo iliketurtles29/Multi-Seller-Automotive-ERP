@@ -1,0 +1,78 @@
+{% extends 'partials/base.html' %}
+{% block content %}
+{% load static %}
+<title>{% block title %}Billie Moto | My Account{% endblock %}</title>
+
+
+    <main class="main pages">
+        
+        <div class="page-content pt-100 pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                        <li class="nav-item">
+                                            <a style="font-size:large ;"class="nav-tabs single-category p-relative mb-10 single-widget-category"  href="{% url 'core:dashboard' %}"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                          </li>
+                                      <li class="nav-item">
+                                        <a style="font-size:large ;" class="nav-tabs active single-category p-relative mb-10 single-widget-category" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true"><i class="fi-rs-settings-sliders mr-10"></i>Profile</a>
+                                      </li>
+                                      
+                                    </ul>
+                                  </div>
+                                  
+                            </div>
+<style>.borderless-input {
+    border: none;
+    /* Add any additional styling here */
+}
+.resized-input {
+    width: 300px;
+}</style>
+                            <div class="col-md-9">
+                                <div class="tab-content account dashboard-content pl-55">
+                                    <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        <div class="card" style="width: 960px;">
+                                            <div class="card-header border-bottom">
+                                                <h3 class="mb-0" style="color: #F07B3F;">Update Profile</h3>
+                                            </div>
+                                            {%if form.errors%}
+                                            <div class="alert-danger alert">
+                                                <strong>{{form.errors}}</strong>
+                                            </div>
+                                            {%endif%}
+                                                    <div class="card-body" style="display: flex; align-items: center; gap: 15px; margin-left: 60px;">
+                                                        <div>
+                                                            {% if profile.image %}
+                                                                <img src="{{profile.image.url}}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%;" alt="Profile Picture">
+                                                            {%else%}
+                                                                <img src="https://th.bing.com/th/id/OIP.TpqSE-tsrMBbQurUw2Su-AHaHk?rs=1&pid=ImgDetMain" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%;" alt="Profile Picture">
+                                                            {% endif %}
+                                                        </div>
+                                                        <br>    
+                                                    <div>                                                <form action="" method="POST" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="mb-3 form-control ">{{form.full_name}}</div>                                                    <div class="mb-3 form-control ">{{form.bio}}</div>
+                                                    <div class="mb-3 form-control ">{{form.phone}}</div>
+                                                    <div class="mb-3 form-control ">{{form.image}}
+                                                    </div><button style="text-align: end;" type="submit" class="btn btn-success">Save Changes</button>
+                                                </form>
+                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<!-- Mirrored from demosc.chinaz.net/Files/DownLoad/moban/202110/moban5797/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Nov 2021 05:16:09 GMT -->
+</html>
+{% endblock %}

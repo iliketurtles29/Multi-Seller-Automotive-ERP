@@ -1,0 +1,371 @@
+{% load static %}
+<title>{% block title %}Billie Moto | Password Reset{% endblock %}</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    .buttons button {
+        background-color: transparent;
+        color: #2D4059;
+        padding: 10px 20px;
+        border: 2px solid #2D4059;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-right: 10px;
+        font-size: 16px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .buttons button:hover {
+        background-color: #2D4059;
+        color: #fff;
+    }
+    body{
+        font-family: 'Montserrat', sans-serif;
+    }
+    .front-invoice-wrapper{
+        margin: 20px auto;
+        max-width: 700px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+    .front-invoice-top{
+        background-color: #323149;
+        padding: 40px 60px;
+    }
+    .front-invoice-top-left h2, .front-invoice-top-right h2{
+        color: #ffffff;
+        font-size: 22px;
+        margin-bottom: 4px;
+    }
+    .front-invoice-top-left h3, .front-invoice-top-right h3{
+        color: rgba(255,255,255,0.7);
+        font-size: 15px;
+        font-weight: 400;
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+    .front-invoice-top-left h5, .front-invoice-top-right h5{
+        color: rgba(255,255,255,0.7);
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 0;
+    }
+    
+    .front-invoice-top-right{
+        text-align: right;
+    }
+    
+    .service-name{
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 500;
+        margin-top: 60px;
+    }
+    .date{
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+    }
+    
+    .front-invoice-bottom{
+        background-color: #ffffff;
+        padding: 40px 60px;
+        position: relative;
+    }
+    .borderless td, .borderless th {
+        border: none !important;
+    }
+    .custom-table td{
+        font-size: 13px;
+        padding: 6px !important;
+        font-weight: 500;
+    }
+    .description{
+        line-height: 1.6;
+    }
+    .specs{
+        margin-top: 30px;
+        font-size: 14px;
+    }
+    
+    .back{}
+    .invoice-wrapper{
+        margin: 20px auto;
+        max-width: 700px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+    .invoice-top{
+        background: linear-gradient(135deg, #fafafa, #eeeeee);
+        padding: 60px 60px 80px;
+    }
+    .invoice-top-left{
+        /*margin-top: 60px;*/
+    }
+    .invoice-top-left h2, .invoice-top-right h2{	
+        font-size: 22px;
+        margin-bottom: 4px;
+    }
+    .invoice-top-left h3, .invoice-top-right h3{
+        font-size: 15px;
+        font-weight: 400;
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+    .invoice-top-left h5, .invoice-top-right h5{
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 0;
+    }
+    
+    .invoice-top-left h4{
+        margin-top: 40px;
+        font-size: 22px;
+    }
+    .invoice-top-left h6{
+        font-size: 14px;
+        font-weight: 400;
+    }
+    
+    .invoice-top-right h2, .invoice-top-right h3, .invoice-top-right h5{
+        text-align: right;
+    }
+    
+    .logo-wrapper{ overflow: auto; }
+    
+    
+    .invoice-bottom{
+        background-color: #ffffff;
+        padding: 40px 60px;
+        position: relative;
+    }
+    
+    .task-table-wrapper{
+        margin-top: -14%;
+    }
+    .task-table-wrapper .table > thead > tr> th{
+        border: none;
+        padding-left: 0;
+        /*padding-bottom: 30px;*/
+    }
+    .task-table-wrapper .table> tbody> tr:first-child > td{
+        border-top: 0;
+    }
+    .task-table-wrapper .table> tbody> tr> td{
+        padding-top: 25px;
+        padding-left: 0;
+    }
+    .task-table-wrapper .table> tbody> tr> td> h4{
+        margin-top: 0;
+    }
+    .task-table-wrapper .table tbody .desc{
+        width:60%;
+    }
+    .desc h3{
+        margin-top: 0;
+        font-size: 20px;
+    }
+    .desc h5{
+        font-weight: 400;
+        line-height: 1.4;
+        font-size: 14px;
+    }
+    .invoice-bottom-total{
+        background-color: #fafafa;
+        overflow: auto;
+        margin-top: 50px;
+    }
+    .invoice-bottom-total .no-padding{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .invoice-bottom-total .tax-box, .invoice-bottom-total .add-box, .invoice-bottom-total .sub-total-box{
+        display: inline-block;
+        margin-right: 10px;
+        padding: 10x;
+    }
+    .invoice-bottom-total .total-box{
+        background-color: #323149;
+        padding: 10px;
+    }
+    .invoice-bottom-total .total-box h6{
+        margin-top: 0;
+        color: #ffffff;
+        text-align: right;
+    }
+    .invoice-bottom-total .total-box h3{
+        margin-bottom: 0;
+        color: #ffffff;
+        text-align: right;
+    }
+    
+    .divider{
+        margin-top: 50px;
+        margin-bottom: 5px;
+    }
+    
+    .bottom-bar{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 26px;
+        background-color: #323149;
+    }
+    table.table th {
+        text-align: left;
+        padding-right: 20px; /* Adjust the value to control the spacing */
+    }
+    .invoice-bottom-total .tax-box, 
+    .invoice-bottom-total .add-box, 
+    .invoice-bottom-total .sub-total-box {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 10px;
+    }
+    .invoice-bottom-total .total-box {
+        background-color: #323149;
+        /* Remove padding to make the total box only cover the total elements */
+    }
+    .invoice-bottom-total .total-box h6 {
+        margin-top: 0;
+        color: #ffffff;
+        text-align: right;
+    }
+    .invoice-bottom-total .total-box h3 {
+        margin-bottom: 0;
+        color: #ffffff;
+        text-align: right;
+    }
+    
+    .divider {
+        margin-top: 50px;
+        margin-bottom: 5px;
+    }
+    
+    .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 26px;
+        background-color: #323149;
+    }
+</style>
+<body>
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'core:redirect_to_multiple_urls' %}" style="font-size: 40px; text-decoration: none;">Go back to Dashboard</a>
+</div>
+	<section class="back">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="invoice-wrapper" id="invoice">
+						<div class="invoice-top">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="invoice-top-left">
+										<h2>Invoice</h2>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="invoice-top-right">
+										<img src="{% static 'assets/img/logo/logologo.png' %}" style="float: right;" alt="logo"><br>
+                                        <p style="text-align: right; font-size: 10px;" >Bonifacio Street Pila, Laguna</p>
+
+
+										<!-- <div class="logo-wrapper">
+											<img src="./Acme.png" class="img-responsive pull-right logo" />
+										</div> -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="invoice-bottom">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="task-table-wrapper">
+										<table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>TITLE</th>
+                                                    <th>PRICE</th>
+                                                    <th>QUANTITY</th>
+                                                    <th>AMOUNT</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for product_id, item in cart_data.items %}
+                                                <tr>
+                                                    <td class="desc">
+                                                        <h4>{{item.title}}<h4>
+                                                        <h5 style="margin-top: -20px;"></h5>
+                                                    </td>
+                                                    <td style="text-align: center;"><h4>₱ {{item.price|floatformat:2}}</h4></td>
+                                                    <td style="text-align: center;"><h4>{{item.qty}}</h4></td>
+                                                    <td style="text-align: center;"><h4>₱ {% widthratio item.price 1 item.qty%}</h4></td>
+                                                </tr>
+                                        
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div class="col-md-12">
+                                    <div class="invoice-bottom-total">
+                                        <div class="col-sm-4 no-padding">
+                                            <!-- "total box" only contains the total elements -->
+                                     
+                                             <div class="total-box">
+                                                <h6>GRAND TOTAL</h6>
+                                                <h3>₱ {{cart_total_amount}}</h3>
+                                
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="clearfix"></div>
+								<div class="col-xs-12">
+									<hr class="divider">
+								</div>
+							</div>
+							<div class="bottom-bar"></div>
+                            <div class="invoice-top-left">
+                                <h5 style="margin-bottom: -10px; font-size: 20px;">Invoice for</h5>
+                                
+                            </div>
+                            <p  style=" font-size: 15px;">Invoice to: {{request.user|title}}<br> </p>
+						</div>
+					</div>
+                    <div class="buttons" style="text-align: center;">
+                        <button id="print">Print</button>
+                        <button id="download" onclick="generatePDF()">Download PDF</button>
+                    </div>
+                    <script>
+                        function generatePDF(){
+                            const element = document.getElementById("invoice");
+                            html2pdf()
+                            .from(element)
+                            .save();
+                        }
+
+                        {% comment %} document.addEventListener("DOMContentLoaded", function() {
+                           document.getElementById("download").addEventListener("click", () => {
+                                const invoice = document.getElementById("invoice"); // Get the invoice element
+                                var opt = {
+                                    margin: 1,
+                                    filename: 'invoice.pdf',
+                                    image: { type: 'png', quality: 0.98 },
+                                    html2canvas: { scale: 2 },
+                                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                                };
+                        
+                                html2pdf().from(invoice).save();
+                            }); // Your code here, including the HTML to PDF conversion
+                        }); {% endcomment %}
+                            
+                        
+                    </script>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+

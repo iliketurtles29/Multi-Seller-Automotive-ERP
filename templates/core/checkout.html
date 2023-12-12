@@ -1,0 +1,242 @@
+{% extends 'partials/base.html' %}
+{% block content %}
+{% load static %}
+<title>{% block title %}Billie Moto | Checkout{% endblock %}</title>
+      <!-- back to top start -->
+      <div class="progress-wrap">
+         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+         </svg>
+      </div>
+      <!-- back to top end -->
+      
+    <!-- header-start -->
+     <!-- header-end -->
+
+    <!-- offcanvas area start -->
+    <div class="offcanvas__area">
+        <div class="offcanvas__wrapper">
+        <div class="offcanvas__close">
+            <button class="offcanvas__close-btn" id="offcanvas__close-btn">
+                <i class="fal fa-times"></i>
+            </button>
+        </div>
+        <div class="offcanvas__content">
+            <div class="offcanvas__logo mb-40">
+                <a href="index.html">
+                <img src="assets/img/logo/logo-white.png" alt="logo">
+                </a>
+            </div>
+            <div class="offcanvas__search mb-25">
+                <form action="#">
+                    <input type="text" placeholder="What are you searching for?">
+                    <button type="submit" ><i class="far fa-search"></i></button>
+                </form>
+            </div>
+            <div class="mobile-menu fix"></div>
+            <div class="offcanvas__action">
+
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->      
+    <div class="body-overlay"></div>
+    <!-- offcanvas area end -->
+
+    <main>
+    
+
+        <!-- coupon-area-start -->
+        <section class="coupon-area pt-0 pb-30">
+
+        </section>
+        <!-- coupon-area-end -->
+
+        <!-- checkout-area-start -->
+        <section class="checkout-area pb-85">
+            <div class="container">
+                <form action="#">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkbox-form">
+                                <h3>Billing Details</h3>
+                                <div class="row">
+                                 
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>First Name <span class="required">*</span></label>
+                                            <input type="text" value="{{request.user.username|title}}" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Last Name <span class="required">*</span></label>
+                                            <input type="text"  value="{{active_address.mobile}}" placeholder="">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Address <span class="required">*</span></label>
+                                            <input type="text" value="{{active_address.address}}" placeholder="Street address">
+                                        </div>
+                                    </div>
+{% comment %}                                    
+                                  
+                                 
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Phone <span class="required">*</span></label>
+                                            <input type="text" placeholder="Phone number">
+                                        </div>
+                                    </div> {% endcomment %}
+                                    
+                                </div>
+                                <div class="different-address">
+                                   
+                                    <div id="ship-box-info">
+                                        <div class="row">
+                                            
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>First Name <span class="required">*</span></label>
+                                                    <input type="text" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>Last Name <span class="required">*</span></label>
+                                                    <input type="text" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="checkout-form-list">
+                                                    <label>Address <span class="required">*</span></label>
+                                                    <input type="text" placeholder="Street address">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>Phone <span class="required">*</span></label>
+                                                    <input type="text" placeholder="Phone number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %} <div class="order-notes">
+                                        <div class="checkout-form-list">
+                                            <label>Order Notes</label>
+                                            <textarea id="checkout-mess" cols="30" rows="10" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                        </div>
+                                    </div> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="your-order mb-30 ">
+                                <h3>Your order</h3>
+                                <div class="your-order-table table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product-name">Product</th>
+                                                <th class="product-total">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for product_id, item in cart_data.items %}
+                                            <tr class="cart_item">
+                                                <td class="product-name">
+                                                   {{item.title}}t <strong class="product-quantity"> × {{item.qty}}</strong>
+                                                </td>
+                                                <td class="product-total">
+                                                    <span class="amount">₱ {% widthratio item.price 1 item.qty%}</span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="cart-subtotal">
+                                                <th>Cart Subtotal</th>
+                                                <td><span class="amount">₱ {{cart_total_amount|floatformat:2}}</span></td>
+                                            </tr>
+                                            <tr class="shipping">
+                                                <th>Shipping</th>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            <input type="radio" name="shipping">
+                                                            <label>
+                                                                Flat Rate: <span class="amount">$7.00</span>
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <input type="radio" name="shipping">
+                                                            <label>Free Shipping:</label>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <tr class="order-total">
+                                                <th>Order Total</th>
+                                                <td><span class="amount">₱ {{cart_total_amount|floatformat:2}}</span></td>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                                <div class="payment-method">
+                                    <div class="accordion" id="checkoutAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="checkoutOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#bankOne" aria-expanded="true" aria-controls="bankOne">
+                                            Direct Bank Transfer
+                                            </button>
+                                        </h2>
+                                        <div id="bankOne" class="accordion-collapse collapse show" aria-labelledby="checkoutOne" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                             <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="paymentTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment" aria-expanded="false" aria-controls="payment">
+                                            Cheque Payment
+                                            </button>
+                                        </h2>
+                                        <div id="payment" class="accordion-collapse collapse" aria-labelledby="paymentTwo" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                            <p>Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="paypalThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paypal" aria-expanded="false" aria-controls="paypal">
+                                            PayPal
+                                            </button>
+                                        </h2>
+                                        <div id="paypal" class="accordion-collapse collapse" aria-labelledby="paypalThree" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a
+                                                PayPal account.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="order-button-payment mt-20">
+                                            <a href="{% url 'core:payment-completed' %}">COD</a>
+                                    {% comment %} <button type="submit" class="tp-btn-h1">Place order</button> {% endcomment %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+        <!-- checkout-area-end -->
+{% endblock %}

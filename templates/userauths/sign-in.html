@@ -1,0 +1,44 @@
+{%extends 'partials/base.html'%}
+{%load static%}
+{%block content%}
+    <main>
+        <!-- account-area-start -->
+        <div class="account-area mt-70 mb-70">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="basic-login mb-50">
+                            <h5>Login</h5>
+                            <label>Don't have an account?<span><a href="{% url "userauths:sign-up" %}"> &#8203; Register Here </a></span></label>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <label for="name">Email Address  <span>*</span></label>
+                                <input id="name" required name="email" type="text" placeholder="Enter Email Address">
+                                <label for="pass">Password <span>*</span></label>
+                                <input id="pass" required name="password" type="password" placeholder="Enter password...">
+                                <div class="login-action mb-10 fix">
+                                    <div class="login-action mb-10 fix">
+                                        <p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in the <a href="{% url "core:terms" %}">terms & conditions</a>.</p>
+                                    </div>
+                                    <span class="log-rem f-left">
+                                       <input id="remember" type="checkbox">
+                                       <label for="remember">Remember me</label>
+                                    </span>
+                                    <span class="forgot-login f-right">
+                                       {% comment %} <a href="{% url 'userauths:password_reset' %}">Forgot your password?</a> {% endcomment %}
+                                       <a href="{% url 'userauths:password_reset' %}">Forgot your password?</a>
+                                    </span>
+                                </div>
+                                <button type="submit" class="tp-in-btn w-100">log in</button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- account-area-end -->
+
+
+    </main>
+    {% endblock %}

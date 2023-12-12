@@ -1,0 +1,223 @@
+<script>
+    console.log("working fine");
+
+$("#comment_form").submit(function(e){
+    e.preventDefault();
+
+    $.ajax({
+        data: $(this).serialize(),
+
+        method: $(this).attr("method"),
+
+        url:$(this).attr("action"),
+
+        dataType: "json",
+
+        success: function(res){
+            console.log("comment Saved to db");
+
+            if(res.bool == true){
+                $("#review-res").html("Review Posted.")
+                $(".hide-comment-form").hide()
+                $(".add-review").hide()
+            }
+        }
+    })
+})
+
+$(document).ready(function(){
+    $(".filter-checkbox, #price-filter-btn").on("click", function(){
+        console.log("clicked");
+
+        let filter_object = {}
+        
+        let min_price = $("#max_price").attr("min")
+        let max_price = $("#max_price").val()
+
+
+        filter_object.min_price = min_price;
+        filter_object.max_price = max_price;
+
+        $(".filter-checkbox").each(function(){
+            let filter_value = $(this).val()
+            let filter_key = $(this).data("filter")
+
+            console.log("filter value: ", filter_value );
+            console.log("filter key: ", filter_key );
+
+            filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key +']:checked')).map(function(element){
+                return element.value
+            })
+        })
+        console.log("Filter object:", filter_object );
+        $.ajax({
+            url: '/filter-products',
+            data: filter_object,
+            dataType: 'json',
+            beforeSend: function(){
+                console.log("sending data");
+            },
+            success: function(response){ 
+                console.log(response);
+                console.log("success");
+                $("#filtered-product").html(response.data)
+            }
+        })
+        $("#max_price").on("blur", function(){
+            console.log("clicked");
+            let min_price = $(this).attr("min")
+            let max_price= $(this).attr("max")
+            let current_price = $(this).val()
+    
+            console.log("current price is:", current_price);
+            console.log("current:", min_price);
+            console.log("current:", max_price);
+        })  
+    })  
+})
+
+
+
+$(".add-to-cart-btn").on("click", function(){  
+
+    let this_val = $(this)
+    let index = this_val.attr("data-index")
+
+
+    let quantity = $(".product-quantity-" + index).val()
+    let product_title = $(".product-title-" + index).val()
+    let product_id = $(".product-id-" + index).val()
+    let product_price = $(".current-product-price-" + index).text()
+    let product_pid = $(".product-pid-" + index).val()
+    let product_image = $(".product-image-" + index).val()
+
+    console.log("quantity ", quantity);
+    console.log("title ", product_title);
+    console.log("id ", product_id);
+    console.log("pid ", product_pid);
+    console.log("price ", product_price);
+    console.log("image ", product_image);
+    console.log("index ", index);
+    console.log("current element ", this_val);
+
+    $.ajax({
+        url: '/add-to-cart',
+        data: {
+            'id': product_id,
+            'pid': product_pid,
+            'image': product_image,
+            'qty': quantity,
+            'title': product_title,
+            'price': product_price,
+        },
+        dataType: 'json',   
+        beforeSend: function(){
+            console.log("adding....")
+        },
+        success: function(response){
+            this_val.html("Added ✔") 
+            console.log("added...")
+            $(".cart-items-count").text(response.totalcartitems)
+        }
+    })
+})
+
+
+
+
+// $("#add-to-cart-btn").on("click", function(){
+//     let quantity = $("#product-quantity").val()
+//     let product_title = $(".product-title").val()
+//     let product_id = $(".product-id").val()
+//     let product_price = $("#current-product-price").text()
+//     let this_val = $(this)
+
+//     console.log("quantity ", quantity);
+//     console.log("title ", product_title);
+//     console.log("id ", product_id);
+//     console.log("price ", product_price);
+//     console.log("current element ", this_val);
+
+//     $.ajax({
+//         url: '/add-to-cart',
+//         data: {
+//             'id': product_id,
+//             'qty': quantity,
+//             'title': product_title,
+//             'price': product_price,
+//         },
+//         dataType: 'json',   
+//         beforeSend: function(){
+//             console.log("adding....")
+//         },
+//         success: function(response){
+//             this_val.html("Product added to cart") 
+//             console.log("added...")
+//             $(".cart-items-count").text(response.totalcartitems)
+//         }
+//     })
+// })
+
+
+</script>
+
+
+{% for p in products %}
+<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
+<div class="product__item product__item-d">
+
+<div class="product__thumb fix">
+    <div class="product__offer">
+    <span class="discount"> -{{p.get_percentage|floatformat:1}}%</span>
+</div>
+    <div class="product-image w-img">
+        <a href="{% url 'core:product-detail' p.pid %}">
+            
+            <img src="{{p.image.url}}" alt="product">
+        </a>
+    </div>
+    <div class="product-action">
+        <a data-product-item="{{p.id}}"class="icon-box icon-box-1 add-to-wishlist">
+            <i class="fal fa-heart"></i>
+            <i class="fal fa-heart"></i>
+        </a>
+    </div>
+</div>
+<div class="product__content-3" style="padding-top: 10px;">
+    <h6><a href="{% url 'core:product-detail' p.pid %}" style="padding-top: 10px;">{{ p.title }}</a></h6>
+    <div class="rating mb-5">
+        <ul>
+        </ul>
+    </div>
+    <div class="price mb-10">
+    <span>₱</span> <span class="current-product-price-{{p.id}}">{{ p.price }}</span>
+    <span><del class="text-danger">{{p.old_price}}</del></span>
+        <p style="font-size: 12px;">{{p.description|truncatechars:50|safe}}</p>
+        <a href="{% url 'core:category-product-list' p.category.cid%}" style="font-size: 10px;">{{ p.category.title }}</a>
+        <a href="{% url 'core:vendor-detail' p.vendor.vid %}" style="font-size: 10px;"> | {{ p.vendor.title }}</a>
+    </div>
+    
+    
+</div>
+<div class="product__add-cart-s text-center">
+    <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
+    <input type="hidden" class="product-pid-{{ p.id }}" value="{{ p.pid }}">
+    <input type="hidden" class="product-image-{{ p.id }}" value="{{ p.image.url }}">
+    <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
+    <input type="hidden" class="product-title-{{p.id}}" value="{{ p.title }}">
+    {% if p.vendor == current_vendor %}
+                                                    <!-- Display button for user's own product -->
+                                                        <button class="cart-btn" disabled style="background-color:#FFD460;">My Product</button>
+                                                    {% elif p.stock_count < 1 %}
+                                                        <button class="cart-btn " disabled style="background-color:indianred; color:aliceblue">Out of Stock</button>
+                                                    {% else %}
+                                                        <button href="cart.html" class="cart-btn add-to-cart-btn" data-index="{{ p.id }}" id="add-to-cart-btn">Add to Cart</button>
+                                                    {% endif %}
+    {% comment %} <button type="button" class="wc-checkout d-flex align-items-center justify-content-center w-100" data-bs-toggle="modal" data-bs-target="#productModalId">
+        Quick View
+    </button> {% endcomment %}
+    
+</div>
+</div>
+</div>
+{% endfor %}

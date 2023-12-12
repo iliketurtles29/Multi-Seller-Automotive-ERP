@@ -1,0 +1,490 @@
+{% extends 'partials/base.html' %}
+{% block content %}
+{% load static %}
+<title>{% block title %}Billie Moto | Detail{% endblock %}</title>
+<script>
+    console.log("working fine");
+
+$("#comment_form").submit(function(e){
+    e.preventDefault();
+
+    $.ajax({
+        data: $(this).serialize(),
+
+        method: $(this).attr("method"),
+
+        url:$(this).attr("action"),
+
+        dataType: "json",
+
+        success: function(res){
+            console.log("comment Saved to db");
+
+            if(res.bool == true){
+                $("#review-res").html("Review Added Successfully.")
+                $(".hide-comment-form").hide()
+                $(".add-review").hide()
+            }
+        }
+    })
+})
+
+$(document).ready(function(){
+    $(".filter-checkbox, #price-filter-btn").on("click", function(){
+        console.log("clicked");
+
+        let filter_object = {}
+        
+        let min_price = $("#max_price").attr("min")
+        let max_price = $("#max_price").val()
+
+
+        filter_object.min_price = min_price;
+        filter_object.max_price = max_price;
+
+        $(".filter-checkbox").each(function(){
+            let filter_value = $(this).val()
+            let filter_key = $(this).data("filter")
+
+            console.log("filter value: ", filter_value );
+            console.log("filter key: ", filter_key );
+
+            filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key +']:checked')).map(function(element){
+                return element.value
+            })
+        })
+        console.log("Filter object:", filter_object );
+        $.ajax({
+            url: '/filter-products',
+            data: filter_object,
+            dataType: 'json',
+            beforeSend: function(){
+                console.log("sending data");
+            },
+            success: function(response){ 
+                console.log(response);
+                console.log("success");
+                $("#filtered-product").html(response.data)
+            }
+        })
+        $("#max_price").on("blur", function(){
+            console.log("clicked");
+            let min_price = $(this).attr("min")
+            let max_price= $(this).attr("max")
+            let current_price = $(this).val()
+    
+            console.log("current price is:", current_price);
+            console.log("current:", min_price);
+            console.log("current:", max_price);
+        })  
+    })  
+})
+
+
+
+$(".add-to-cart-btn").on("click", function(){  
+
+    let this_val = $(this)
+    let index = this_val.attr("data-index")
+
+
+    let quantity = $(".product-quantity-" + index).val()
+    let product_title = $(".product-title-" + index).val()
+    let product_id = $(".product-id-" + index).val()
+    let product_price = $(".current-product-price-" + index).text()
+    let product_pid = $(".product-pid-" + index).val()
+    let product_image = $(".product-image-" + index).val()
+
+    console.log("quantity ", quantity);
+    console.log("title ", product_title);
+    console.log("id ", product_id);
+    console.log("pid ", product_pid);
+    console.log("price ", product_price);
+    console.log("image ", product_image);
+    console.log("index ", index);
+    console.log("current element ", this_val);
+
+    $.ajax({
+        url: '/add-to-cart',
+        data: {
+            'id': product_id,
+            'pid': product_pid,
+            'image': product_image,
+            'qty': quantity,
+            'title': product_title,
+            'price': product_price,
+        },
+        dataType: 'json',   
+        beforeSend: function(){
+            console.log("adding....")
+        },
+        success: function(response){
+            this_val.html("Added ✔") 
+            console.log("added...")
+            $(".cart-items-count").text(response.totalcartitems)
+        }
+    })
+})
+
+
+
+
+// $("#add-to-cart-btn").on("click", function(){
+//     let quantity = $("#product-quantity").val()
+//     let product_title = $(".product-title").val()
+//     let product_id = $(".product-id").val()
+//     let product_price = $("#current-product-price").text()
+//     let this_val = $(this)
+
+//     console.log("quantity ", quantity);
+//     console.log("title ", product_title);
+//     console.log("id ", product_id);
+//     console.log("price ", product_price);
+//     console.log("current element ", this_val);
+
+//     $.ajax({
+//         url: '/add-to-cart',
+//         data: {
+//             'id': product_id,
+//             'qty': quantity,
+//             'title': product_title,
+//             'price': product_price,
+//         },
+//         dataType: 'json',   
+//         beforeSend: function(){
+//             console.log("adding....")
+//         },
+//         success: function(response){
+//             this_val.html("Product added to cart") 
+//             console.log("added...")
+//             $(".cart-items-count").text(response.totalcartitems)
+//         }
+//     })
+// })
+
+
+</script>
+<script>
+    function scrollToReviewSection() {
+        var reviewSection = document.getElementById("review-section");
+        reviewSection.scrollIntoView({ behavior: "smooth" });
+    }
+</script>
+    <!-- offcanvas area start -->
+    <div class="offcanvas__area">
+        <div class="offcanvas__wrapper">
+        <div class="offcanvas__close">
+            <button class="offcanvas__close-btn" id="offcanvas__close-btn">
+                <i class="fal fa-times"></i>
+            </button>
+        </div>
+        <div class="offcanvas__content">
+            <div class="offcanvas__logo mb-40">
+                <a href="index.html">
+                <img src="{% static 'assets/img/logo/logo-white.png' %}" alt="logo">
+                </a>
+            </div>
+            <div class="offcanvas__search mb-25">
+                <form action="#">
+                    <input type="text" placeholder="What are you searching for?">
+                    <button type="submit" ><i class="far fa-search"></i></button>
+                </form>
+            </div>
+            <div class="mobile-menu fix"></div>
+            <div class="offcanvas__action">
+
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->      
+    <div class="body-overlay"></div>
+    <!-- offcanvas area end -->
+
+    <main>
+        <!-- breadcrumb__area-start -->
+        <section class="breadcrumb__area box-plr-75">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xxl-12">
+                        <div class="breadcrumb__wrapper">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                </ol>
+                              </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- breadcrumb__area-end -->
+
+        <!-- product-details-start -->
+        <div class="product-details">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="product__thumb fix">
+                            <div class="product__offer">
+                            <span class="discount"> -{{p.get_percentage|floatformat:0}}%</span>
+                        </div>
+                       
+                        <div class="product__details-nav d-sm-flex align-items-start">
+                                <ul class="nav nav-tabs flex-sm-column justify-content-between" id="productThumbTab" role="tablist">
+                                </ul>
+                            <div class="product__details-thumb">
+                                <div class="tab-content" id="productThumbContent">
+                                    <div class="tab-pane fade show active" id="thumbOne" role="tabpanel" aria-labelledby="thumbOne-tab">
+                                        <div class="product__details-nav-thumb w-img">
+                                            <img src="{{p.image.url}}" style="width: 670px; height: 670px;" alt="">
+                                        </div>
+                                    </div>
+                                  </div>
+                            </div>
+                        </div> </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="product__details-content">
+                            <h6><a href="{% url 'core:product-detail' p.pid %}">{{ p.title }}</a></h6>
+                            {% comment %} <div class="pd-rating mb-10">
+                                <ul class="rating">
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                </ul>
+                                <span>({{reviews.count}} review)</span>
+                                <span onclick="scrollToReviewSection()">Add your review</span>
+                            </div> {% endcomment %} 
+                            <div class="price mb-10">
+                               <span>₱</span> <span class="current-price current-product-price-{{p.id}}">{{p.price}}</span>  
+                               <span class="old-price"><del class="text-danger">₱{{p.old_price}}</del></span>
+                            </div>
+                            <div class="features-des mb-20 mt-10">
+                                <ul>
+                                    <p>{{p.description|safe}}</p>
+                                </ul>
+                            </div>
+                            <div>
+                                {% comment %} <input type="number" value="1" name="" id="product-quantity" class="w-25 mb-20"> {% endcomment %}
+                            </div>
+                            <div class="product-stock mb-20">
+                                <h5>Availability: <span> {{p.stock_count}} In stock</span></h5>
+                                {% comment %} <input type="number" value="product-quantity-{{ p.id }}" id="product-quantity" class="product-quantity-{{ p.id }}"> {% endcomment %}
+                                <input type="hidden" class="product-pid-{{ p.id }}" value="{{ p.pid }}">
+                                <input type="hidden" class="product-image-{{ p.id }}" value="{{ p.image.url }}">
+                                <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
+                                <input type="hidden" class="product-title-{{p.id}}" value="{{ p.title }}">
+                            </div>
+                            <div class="cart-option mb-15">
+                                <div class="product-quantitys mr-20">
+                                    <div class="cart-plus-minus p-relative">
+                                        <input type="number" value="1" class="product-quantity-{{ p.id }}" name="" id="product-quantity">
+                                        <div class="dec qtybutton">-</div>
+                                        <div class="inc qtybutton">+</div></div>
+                                </div>
+                                {% if p.vendor == current_vendor %}
+                                                    <!-- Display button for user's own product -->
+                                                        <button class="cart-btn" disabled style="background-color:#FFD460;" >My Product</button>
+                                                    {% elif p.stock_count < 1 %}
+                                                        <button class="cart-btn " disabled style="background-color:indianred; color:aliceblue">Out of Stock</button>
+                                {% else %}
+                                    <button href="cart.html" class="cart-btn add-to-cart-btn" data-index="{{ p.id }}" id="add-to-cart-btn">Add to Cart</button>
+                                {% endif %}
+                            </div>
+                            <div class="details-meta">
+                                <div class="d-meta-left">
+                                    <div class="dm-item mr-20">
+                                        
+                                        <a data-product-item="{{p.id}}" class="add-to-wishlist"><i class="fal fa-heart"></i>Add to wishlist</a>
+                                    </div>
+                                    <div class="dm-item">
+                                        <a href="#"><i class="fal fa-layer-group"></i>Compare</a>
+                                    </div>
+                                </div>
+                                <div class="d-meta-left">
+                                    <div class="dm-item">
+                                        <a href="#"><i class="fal fa-share-alt"></i>Share</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-tag-area mt-15">
+                                <div class="product_info">
+                                    <span class="sku_wrapper">
+                                        <span class="title">Product ID:</span>
+                                        <a>{{ p.sku }}</a>
+
+                                    </span>
+                                    <span class="posted_in">
+                                        <span class="title">Categories:</span>
+                                        <a href="{% url 'core:category-product-list' p.category.cid%}">{{ p.category.title }}</a>
+                                    </span>
+                                    <br>
+                                    <div class="location-item mb-30">
+                                        <div class="sm-item-loc sm-item-border mb-20">
+                                            <div class="sml-icon mr-20">
+                                                <i class="fal fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="sm-content">
+                                                <span class="text-center">Delivery Address</span>
+                                                <p class="text-center">{{address.address}}</p>
+                                                {% if address.status == True  %}
+                                                    <p style="color: cadetblue;">Verified Address</p>
+                                                    {% else %}
+                                                    <p style="color: cadetblue;">Unverified Address</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+            
+                    </div>
+                </div><div class="product-widget mb-20" style="margin-top: 20px;">
+                    <div class="location-item mb-20">
+                        <img src="{{p.vendor.image.url}}" style="height: 100px; width: 100px; margin-top: 10px;" alt=""><br>
+                        <div class="sm-item-loc sm-item-border mb-20" style="margin-top: 10px;">
+                            <div class="sml-icon mr-20">
+                                <i class="fal fa-map-marker-alt"></i>
+                            </div>
+                            <div class="sm-content">
+                                <span class="text-center">Find us</span>
+                                <p class="text-center">{{p.vendor.address}}</p>
+                            </div>
+                        </div>
+                        <div class="sm-item-loc sm-item-border mb-20">
+                            <div class="sml-icon mr-20">
+                                <i class="fal fa-phone-alt"></i>
+                            </div>
+                            <div class="sm-content">
+                                <div id="review-section">
+                                <span class="text-center">Contact Seller</span>
+                                <p class="text-center">{{p.vendor.contact}}</p>
+                            </div>
+                            </div>
+                                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- product-details-end -->
+        
+        <!-- product-details-des-start -->
+        <div class="product-details-des mt-40 mb-60">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="product__details-des-tab">
+                            <ul class="nav nav-tabs" id="productDesTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                   
+                                  <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="true">Reviews ({{reviews.count}}) </button>
+                                    
+                                </li>
+                              </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="prodductDesTaContent">
+                    
+                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                        <div class="product__details-review">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div class="review-rate">
+                                        <h5>{{average_rating.rating|floatformat}} / 5.00</h5>
+                                        <div class="review-star">
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                                <div class="col-xl-8"> 
+                                    <div class="review-des-infod"> 
+                                        <h6>{{reviews.count}} review for "<span>{{p.title}}</span>"</h6> 
+                                        <div class="review-details-des"> 
+                                     
+                                           
+                                            <div class="review-details-content">
+                                               
+                                                {% if reviews %}
+                                                <div class="author-image mr-15">
+                                                    <a href="#"> <img src="{% static 'assets/img/author/author-sm-1.jpg' %}" alt=""></a>
+                                                </div>
+                                                <div class="name-date mb-30">
+                                                    <h6>{{ reviews.0.user.username|title }} – <span>{{ reviews.0.date }}</span></h6>
+                                                </div>
+                                                <p>{{ reviews.0.review }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                            {% if request.user.is_authenticated %}
+                            {% if make_review%}
+                            {% if cart_order.product_status == 'Delivered' %}
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="product__details-comment ">
+                                        <div class="comment-title mb-20" >
+                                           <h3 class="add-review">Add a review</h3>
+                                           <p>Your email address will not be published. Required fields are marked *</p>
+                                           <strong class="text-success" id="review-res"></strong>
+                                        </div>
+                                        <div class="comment-rating mb-20">
+                                        </div>
+                                        <div class="comment-input-box">
+                              
+                                           <form action="{% url 'core:ajax_add_review' p.id %}" class="comment_form hide-comment-form" id="comment_form" method="POST">
+                                            {% csrf_token %}  
+                                            <div class="row">
+                                                 <div class="col-xxl-12">
+                                                       {{review_form.review}}
+                                                 </div>
+                                                 <div class="col-xxl-12">
+                                                    {{review_form.rating}}
+                                              </div>
+                                                 <div class="col-xxl-12">
+                                                    <div class="comment-agree d-flex align-items-center mb-25">
+                                                       <div class="form-check">
+                                                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                          <label class="form-check-label" for="flexCheckDefault">
+                                                           Save my name, email, and website in this browser for the next time I comment.
+                                                          </label>
+                                                        </div>
+                                                    </div>
+                                                 </div>
+                                                 <div class="col-xxl-12">
+                                                    <div class="comment-submit">
+                                                       <button type="submit" class="cart-btn">Submit</button>
+                                                    </div>
+                                                 </div>
+                                              </div>
+                                           </form>
+                                           {% else %}
+                                        <p>Your order needs to be delivered to submit a review.</p>
+                                    {% endif %}
+                                        </div>
+                                     </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- product-details-des-end -->
+        {%endblock%}

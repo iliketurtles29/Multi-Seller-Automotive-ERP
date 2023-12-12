@@ -1,0 +1,459 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+   
+<!-- Mirrored from themepure.net/template/dukamarket/dukamarket/shop.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 19 Feb 2022 17:22:02 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}Billie Moto{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="shortcut icon" type="x-icon" href="{% static 'favicon.png' %}">
+    <!-- CSS here -->
+    <!--<link rel="stylesheet" href="{% static 'assets/css/preloader.css' %}">-->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/meanmenu.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl-carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/swiper-bundle.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/backtotop.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/flaticon/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome-pro.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/default.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
+
+    
+   </head>
+   <body>
+      <!--[if lte IE 9]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+      <![endif]-->
+
+    <!-- back to top start -->
+    <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+           <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+   </div>
+     <!-- back to top end -->
+      
+    <!-- header-start -->
+     <header class="header d-blue-bg">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-inner">
+                    <div class="row align-items-center">
+                        <div class="col-xl-6 col-lg-7">
+                            <div class="header-inner-start px-2 py-2">
+                                <div class="support d-none d-sm-block">
+                                    {% if user.is_authenticated %}
+                                    <p>Welcome,
+                                        {% if user.first_name == "" %}
+                                            {{user.username}}
+                                        {% else %}
+                                            {{ user.first_name }}  {{ user.last_name }}
+                                        {% endif %}
+                                    </p>
+                                    {% else %}
+                                    <p> Please login to continue</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-5 d-none d-lg-block">
+                            <div class="header-inner-end text-md-end">
+                                <div class="ovic-menu-wrapper">
+                                    <ul>
+                                        {% if request.user.is_authenticated %}
+                                            {% if request.user.vendor %}
+                                                <!-- If the user has a vendor account, show a different link -->
+                                                <li><a href="{% url 'core:dashboard' %}">Go to Admin Site</a></li>
+                                            {% else %}
+                                                <!-- Check if the user is already registered as a vendor -->
+                                                {% with request.user.vendor_set.all|length as vendor_count %}
+                                                    {% if vendor_count > 0 %}
+                                                        <li><a href="{% url 'core:admin-dashboard' %}">My Shop</a></li>
+                                                    {% else %}
+                                                        <li><a href="{% url 'userauths:register_vendor' %}">Register as Seller</a></li>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endif %}
+                                            <!-- Other menu items -->
+                                            <li><a href="{% url 'userauths:sign-out' %}">Logout</a></li>
+                                        {% else %}
+                                            <li><a href="{% url 'userauths:sign-in' %}">Login</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-mid">
+            <div class="container">
+                <div class="heade-mid-inner">
+                    <div class="row align-items-center">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4">
+                            <div class="header__info">
+                                <div class="logo">
+                                    <a href="{% url 'core:index' %}" class="logo-image"><img src="{% static 'assets/img/logo/billiemoto.svg' %}" alt="logo"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-lg-4 d-none d-lg-block">
+                            <div class="header__search">
+                                <form action="{% url 'core:search' %}" method="GET">
+                                    <div class="header__search-box">
+                                        <input class="search-input" type="text" placeholder="I'm shopping for..." name="q">
+                                        <button class="button" type="submit"><i class="far fa-search"></i></button>
+                                    </div>
+                                    <div class="header__search-cat">
+                                        <span>Search here: </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-5 col-md-8 col-sm-8">
+                            <div class="header-action">
+                                <div class="block-userlink">
+                                    <a class="icon-link" href="{% url 'core:dashboard' %}">
+                                    <i class="flaticon-user"></i>
+                                    <span class="text">
+                                    <span class="sub">Profile</span>
+                                    My Account </span>
+                                    </a>
+                                </div>
+                                <div class="block-wishlist action">
+                                    <a class="icon-link" href="{% url 'core:wishlist'%}">
+                                    <i class="flaticon-heart"></i>
+                                    {% if user.is_authenticated %}
+                                        <span class="count">{{ wishlist.count }}</span>
+                                    {% else %}
+                                        <span class="count">0</span>
+                                    {% endif %}
+                                    <span class="text">
+                                    <span class="sub">Favorite</span>
+                                    My Wishlist </span>
+                                    </a>
+                                </div>
+                                <div class="block-cart action">
+                                    <a class="icon-link" href="{% url 'core:cart' %}">
+                                    <i class="flaticon-shopping-bag"></i>
+                                    <span class="count cart-items-count">{{ request.session.cart_data_obj|length }} </span>
+                                    <span class="text">
+                                    <span class="sub">Your Cart:</span>
+                                    PHP {{cart_total_amount|floatformat:2}} </span>
+                                    </a>
+                                    <div class="cart">
+                                        <div class="cart__mini">
+                                            <ul>
+
+                                                </li>
+                                                <li>
+                                                  <div class="cart__item d-flex justify-content-between align-items-center">
+                                                    <div class="cart__inner d-flex">
+                                        
+                                                      <div class="cart__details">
+                                                   
+                                                        <div class="cart__price">
+                                       
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                     
+                                                  </div>
+                                                </li>
+                                                <li>
+                                                  <div class="cart__sub d-flex justify-content-between align-items-center">
+                           
+                                                  </div>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'core:cart' %}" class="wc-cart mb-10">View cart</a>
+                                                    <a href="{% url 'core:checkout' %}" class="wc-checkout">Checkout</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="header__bottom">
+            <div class="container">
+                <div class="row g-0 align-items-center">
+                    <div class="col-lg-3">                        
+                        <div class="cat__menu-wrapper side-border d-none d-lg-block">
+                            <div class="cat-toggle">
+                                <button type="button" class="cat-toggle-btn cat-toggle-btn-1"><i class="fal fa-bars"></i> Shop by Categories</button>
+                                <div class="cat__menu">
+                                    <nav id="mobile-menu" style="display: block;">
+                                        <ul>
+                                            {% for c in categories %}
+                                            <li><a href="{% url 'core:category-product-list' c.cid %}">{{c.title}} </a></li>
+                                            {%endfor%}
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-3">
+                      <div class="header__bottom-left d-flex d-xl-block align-items-center">
+                        <div class="side-menu d-lg-none mr-20">
+                          <button type="button" class="side-menu-btn offcanvas-toggle-btn"><i class="fas fa-bars"></i></button>
+                        </div>
+                        <div class="main-menu d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <a href="{% url 'core:index' %}" class="active">Home</a>                       
+                                    </li>
+                                    <li><a href="{% url 'core:product-list' %}">Shop</a></li>
+                                    
+                                    <li><a href="{% url 'core:vendor-list' %}">Vendors</i></a></li>
+
+                                    <li><a href="{% url 'core:category-list'%}">Category<i class="far fa-angle-down"></i></a>
+                                        <ul class="submenu">
+                                            {%for c in categories%}
+                                            <li><a href="{% url 'core:category-product-list' c.cid%}">{{c.title}} </a></li>
+                                            {%endfor%}
+                                            <hr>    
+                                            <li><a href="{% url 'core:category-list'%}">All Categories</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Pages <i class="far fa-angle-down"></i></a>
+                                        <ul class="submenu">
+                                            <li><a href="{% url 'core:dashboard' %}">My Account</a></li>
+                                            <li><a href="{% url 'core:product-list' %}">Product List</a></li>   
+                                            <li><a href="{% url 'core:cart' %}">Cart</a></li>
+                                            <li><a href="{% url 'core:wishlist' %}">Wishlist</a></li>
+                                            <li><a href="{% url 'core:about-us' %}">Billie Moto Team</a></li>
+                                            <!-- <li><a href="404.html">404 Error</a></li> -->
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-9">
+                        <div class="shopeing-text text-sm-end">
+     
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </header>
+     <div class="search-wrap d-none">
+        <div class="search-inner">
+            <i class="fal fa-times search-close" id="search-close"></i>
+            <div class="search-cell">
+                <form method="get" action="https://themepure.net/" >
+                    <div class="search-field-holder">
+                        <input type="search" name="s" class="main-search-input" value="" placeholder="Search Your Keyword...">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+     {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                <strong>{{ message }}</strong>
+            </div>
+        {%endfor%}
+    {%endif%}
+    <script>
+        setTimeout(() => {
+            $(".alert").alert("close")
+        }, 3050)
+    </script>
+     <!-- header-end -->
+        {% block content%}
+
+        {% endblock %}
+     <footer>
+        <div class="fotter-area d-dark-bg">
+            <div class="footer__top pt-70 pb-30">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-4 order-last-md">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                    <div class="footer__widget">
+                                        <div class="footer__widget">
+                                                    <div class="footer__widget-title">
+                                                        <h4>My Account</h4>
+                                                    </div>
+                                                    <div class="footer__widget-content">
+                                                        <div class="footer__link">
+                                                            <ul>                                                           
+                                                                <li><a href="{% url 'core:cart' %}">Shopping Cart</a></li>
+                                                                <li><a href="{% url 'core:wishlist'%}">Wishlist</a></li>
+                                                                <li><a href="{% url 'core:terms'%}">Terms &amp; Conditions</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                                    <div class="footer__widget">
+                                        <div class="footer__widget-title">
+                                            <h4>Quick Links</h4>
+                                        </div>
+                                        <div class="footer__widget-content">
+                                            <div class="footer__link">
+                                                <ul>
+                                                    <li><a target="_blank" href="https://www.google.com/maps/place/Bonifacio+St,+Pila,+Laguna/@14.233325,121.3632688,17z/data=!3m1!4b1!4m6!3m5!1s0x3397e21b2b8e19b7:0x30b1246fe38ae41a!8m2!3d14.233325!4d121.3632688!16s%2Fg%2F12hz98tj5?entry=ttu">Store Location</a></li>
+                                                    <li><a href="{% url 'core:dashboard' %}">My account</a></li>
+                                                    <li><a href="{% url 'core:about-us' %}">Billie Moto Team</a></li>
+                                                  
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-7 col-lg-8 order-first-md">
+                            <div class="footer__top-left">
+                                <div class="row">
+                                    <div class="footer__widget">
+                                        <div class="footer__widget-title mb-20">
+                                            <h4>About The Store</h4>
+                                        </div>
+                                        <div class="footer__widget-content">
+                                            <p class="footer-text mb-10">Our mission is to provide the best customer experience in the automotive industry by making auto equipment, <br> gears, and accessories available right at your doorstep. So come with us in our journey as we ply the road <br> for a better tomorrow with our valued vehicles.</p> <br>
+                                            <div class="footer__hotline d-flex align-items-center mb-5">
+                                                <div class="icon mr-10">
+                                                    <i class="fal fa-headset"></i>
+                                                </div>
+                                                <div class="text">
+                                                    <h4>Got Question? Call us 24/7!</h4>
+                                                    <span><a href="tel:100-123-456-7890">(+100) 123 456 7890</a></span>
+                                                </div>
+                                            </div>
+                                            <div class="footer__info">
+                                                <ul>
+                                                    <li>
+                                                        <span>Address:  <a target="_blank" href="https://www.google.com/maps/place/Bonifacio+St,+Pila,+Laguna/@14.233325,121.3632688,17z/data=!3m1!4b1!4m6!3m5!1s0x3397e21b2b8e19b7:0x30b1246fe38ae41a!8m2!3d14.233325!4d121.3632688!16s%2Fg%2F12hz98tj5?entry=ttu">Bonifacio Street Pila, Laguna</a></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <div class="container">
+                    <div class="footer__bottom-content pt-20 pb-20">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="footer__links text-center mb-20">
+                                    <p>
+                                        <a >Online Shopping</a>
+                                        <a>Engine</a>
+                                        <a>My Orders</a>
+                                        <a>Cooling System</a>
+                                        <a>Exhaust System</a>
+                                        <a>Support</a>
+                                        <a>Brake System</a>
+                                        <a>New Arrivals</a>
+                                        <br>
+                                        <a>Special Products </a>
+                                        <a>Manufacturers</a>
+                                        <a>Powers And Hand Tools</a>
+                                        <a>Business</a>
+                                    </p>
+                                </div>
+                                <div class="copy-right-area text-center">
+                                    <p>Copyright © <span>Team Agui of BSIT 3A - WAM</span> All Rights Reserved.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer-end -->
+
+
+      <!-- JS here -->
+      <script src="{% static 'assets/js/vendor/jquery.js' %}"></script>
+      <script src="{% static 'assets/js/vendor/waypoints.js' %}"></script>
+      <script src="{% static 'assets/js/bootstrap-bundle.js' %}"></script>
+      <script src="{% static 'assets/js/meanmenu.js' %}"></script>
+      <script src="{% static 'assets/js/swiper-bundle.js' %}"></script>
+      <script src="{% static 'assets/js/tweenmax.js' %}"></script>
+      <script src="{% static 'assets/js/owl-carousel.js' %}"></script>
+      <script src="{% static 'assets/js/magnific-popup.js' %}"></script>
+      <script src="{% static 'assets/js/parallax.js' %}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.0/html2pdf.bundle.min.js"></script>
+
+      <script src="{% static 'assets/js/images-loaded.js' %}"></script>
+      <script src="{% static 'assets/js/isotope.js' %}"></script>
+      <script src="{% static 'assets/js/jquery.countdown.min.js' %}"></script>
+      <script src="{% static 'assets/js/jquery.elevatezoom.js' %}"></script>
+      <script src="{% static 'assets/js/jquery.syotimer.min.js' %}"></script>
+      <script src="{% static 'assets/js/jquery.theia.sticky.js' %}"></script>
+      <script src="{% static 'assets/js/jquery.vticker-min.js' %}"></script>
+      <script src="{% static 'assets/js/jquery-ui.js' %}"></script>
+      <script src="{% static 'assets/js/leaflet.js' %}"></script>
+      <script src="{% static 'assets/js/perfect-scrollbar.js' %}"></script>
+      <script src="{% static 'assets/js/scrollup.js' %}"></script>
+      <script src="{% static 'assets/js/select2.min.js' %}"></script>
+      <script src="{% static 'assets/js/slick.js' %}"></script>
+      <script src="{% static 'assets/js/waypoint.js' %}"></script>
+
+
+      <script src="{% static 'assets/js/backtotop.js' %}"></script>
+      <script src="{% static 'assets/js/nice-select.js' %}"></script>
+      <script src="{% static 'assets/js/countdown.min.js' %}"></script>
+      <script src="{% static 'assets/js/counterup.js' %}"></script>
+      <script src="{% static 'assets/js/wow.js' %}"></script>
+      <script src="{% static 'assets/js/isotope-pkgd.js' %}"></script>
+      <script src="{% static 'assets/js/imagesloaded-pkgd.js' %}"></script>
+      <script src="{% static 'assets/js/ajax-form.js' %}"></script>
+      <script src="{% static 'assets/js/main.js' %}"></script>
+      <script src="{% static 'assets/js/function.js' %}"></script>
+      <script src="{% static 'assets/js/plugins/jquery-ui.js' %}"></script>
+      <script src="{% static 'assets/html2pdf.bundle.min.js' %}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+     
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js"></script>
+
+   </body>
+
+
+</html>

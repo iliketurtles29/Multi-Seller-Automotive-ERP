@@ -1,0 +1,114 @@
+{%extends 'partials/base.html'%}
+{%block content%}
+{%load static%}
+
+<main id="wishlist_list"><!-- back to top start -->
+      <div class="progress-wrap">
+         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+         </svg>
+      </div>
+      <!-- back to top end -->
+      
+    <!-- header-start -->
+    
+
+    <!-- offcanvas area start -->
+    <div class="offcanvas__area">
+        <div class="offcanvas__wrapper">
+        <div class="offcanvas__close">
+            <button class="offcanvas__close-btn" id="offcanvas__close-btn">
+                <i class="fal fa-times"></i>
+            </button>
+        </div>
+        <div class="offcanvas__content">
+            <div class="offcanvas__logo mb-40">
+               
+                <img src="{% static 'assets/img/logo/logo-white.png' %}" alt="logo">
+                </a>
+            </div>
+            <div class="offcanvas__search mb-25">
+                <form action="#">
+                    <input type="text" placeholder="What are you searching for?">
+                    <button type="submit" ><i class="far fa-search"></i></button>
+                </form>
+            </div>
+            <div class="mobile-menu fix"></div>
+            <div class="offcanvas__action">
+
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->      
+    <div class="body-overlay"></div>
+    <!-- offcanvas area end -->
+
+   
+        <!-- page-banner-area-start -->
+        <!-- page-banner-area-end -->
+
+        <!-- cart-area-start -->
+        <section class="cart-area pb-120 pt-120">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <form action="#">
+                            <div class="table-content table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="product-thumbnail">Images</th>
+                                            <th class="cart-product-name">Product</th>
+                                            <th class="product-subtotal">Availability</th>
+                                            <th class="product-price">Price</th>
+                                            <th class="product-quantity">Wishlist</th>
+                                            
+                                            <th class="product-remove">Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for w in wishlist_items%}
+                                        <tr>     
+                                            <td class="product-thumbnail"><a href="{% url 'core:product-detail' w.product.pid %}"><img src="{{w.product.image.url}}" alt=""></a></td>
+                                            <td class="product-name"><a href="{% url 'core:product-detail' w.product.pid %}">{{w.product.title|truncatechars:30}}</a></td>
+                                            <td class="product-subtotal"><span class="amount" >{% if w.product.stock_count > 0 %}<span style="background-color:darkseagreen; color: aliceblue; padding: 5px 5px 5px 5px; border-radius: 10px;"> In stock</span>{% else %} <span style="background-color:indianred; color: aliceblue; padding: 5px 5px 5px 5px; border-radius: 10px;">Out of stock</span> {% endif %} </span></td>
+                                            <td class="product-price">₱ <span class="amount current-product-price-{{w.product.id}}">{{w.product.price}}</span></td>
+                                            <td class="product-quantity">
+
+                                                <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ w.product.id }}">
+                                                <input type="hidden" class="product-pid-{{ w.product.id }}" value="{{ w.product.pid }}">
+                                                <input type="hidden" class="product-image-{{ w.product.id }}" value="{{ w.product.image.url }}">
+                                                <input type="hidden" class="product-id-{{ w.product.id }}" value="{{ w.product.id}}">
+                                                <input type="hidden" class="product-title-{{w.product.id}}" value="{{ w.product.title }}">
+
+                                                {% if w.product.vendor == current_vendor %}
+                                                    <!-- Display button for user's own product -->
+                                                        <button class="cart-btn" disabled style="background-color:#FFD460; ">My Product</button>
+                                                {% elif w.product.stock_count < 1 %}
+                                                        <button class="cart-btn" disabled style="background-color:indianred; color:aliceblue">Out of Stock</button>
+                                                {% else %}
+                                                <button class="add-to-cart-btn cart-btn" data-index="{{w.product.id}}">Add To Cart</button>
+                                                {% endif %}
+                                                
+                                            </td>
+                                           
+                                            <td data-title="Remove" class="product-remove"><button data-wishlist-product="{{w.id}}" class="delete-wishlist-product"><i class="fa fa-times"></i></button></td>
+                                        </tr>
+                                        {%empty%}
+                                        <tr>
+                                            <td><span>Your wishlist is empty.</span></td>
+                                        </tr>
+                                       {% endfor %}
+                                    </tbody> 
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+         <!-- cart-area-end -->
+
+    </main>
+    {% endblock %}

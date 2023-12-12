@@ -1,0 +1,300 @@
+{% extends 'partials/base.html' %}
+{% block content %}
+{% load static %}
+<title>{% block title %}Billie Moto | Cart{% endblock %}</title>
+<script>
+
+   console.log("working fine");
+
+   $("#comment_form").submit(function(e){
+   e.preventDefault();
+   
+   $.ajax({
+       data: $(this).serialize(),
+   
+       method: $(this).attr("method"),
+   
+       url:$(this).attr("action"),
+   
+       dataType: "json",
+   
+       success: function(res){
+           console.log("comment Saved to db");
+   
+           if(res.bool == true){
+               $("#review-res").html("Review Added Successfully.")
+               $(".hide-comment-form").hide()
+               $(".add-review").hide()
+           }
+       }
+   })
+   })
+   
+   $(document).ready(function(){
+   $(".add-to-cart-btn").on("click", function(){  
+   
+       let this_val = $(this)
+       let index = this_val.attr("data-index")
+   
+   
+       let quantity = $(".product-quantity-" + index).val()
+       let product_title = $(".product-title-" + index).val()
+       let product_id = $(".product-id-" + index).val()
+       let product_price = $(".current-product-price-" + index).text()
+       let product_pid = $(".product-pid-" + index).val()
+       let product_image = $(".product-image-" + index).val()
+   
+       console.log("quantity ", quantity);
+       console.log("title ", product_title);
+       console.log("id ", product_id);
+       console.log("pid ", product_pid);
+       console.log("price ", product_price);
+       console.log("image ", product_image);
+       console.log("index ", index);
+       console.log("current element ", this_val);
+   
+       $.ajax({
+           url: '/add-to-cart',
+           data: {
+               'id': product_id,
+               'pid': product_pid,
+               'image': product_image,
+               'qty': quantity,
+               'title': product_title,
+               'price': product_price,
+           },
+           dataType: 'json',   
+           beforeSend: function(){
+               console.log("adding....")
+           },
+           success: function(response){
+               this_val.html("Added ✔") 
+               console.log("added...")
+               $(".cart-items-count").text(response.totalcartitems)
+           }
+       })
+   })
+   
+   $(".delete-product").on("click", function(){
+       let product_id = $(this).attr("data-product")
+       let this_val = $(this)
+   
+       console.log("product id:", product_id);
+   
+       $.ajax({
+           url: "/delete-from-cart",
+           data: {
+               "id": product_id
+           },
+           dataType: "json",
+           beforeSend: function(){
+               this_val.hide()
+   
+           },
+           success: function(response){
+               this_val.show()
+               $(".cart-items-count").text(response.totalcartitems)
+               $("#cart-list").html(response.data) 
+               location.reload();
+           },
+           
+       })
+   })
+   
+   
+   $(".update-product").on("click", function(){
+       let product_id = $(this).attr("data-product")
+       let this_val = $(this)
+       let product_quantity = $(".product-qty-"+product_id).val()
+   
+       console.log("product id:", product_id);
+       console.log("product qty:", product_quantity);
+   
+       $.ajax({
+           url: "/update-cart",
+           data: {
+               "id": product_id,
+               "qty": product_quantity
+           },
+           dataType: "json",
+           beforeSend: function(){
+   
+           },
+           success: function(response){
+               this_val.show()
+               $(".cart-items-count").text(response.totalcartitems)
+               $("#cart-list").html(response.data) 
+           },
+           
+       })
+   })
+   
+   
+   
+   $(".filter-checkbox, #price-filter-btn").on("click", function(){
+       console.log("clicked");
+   
+       let filter_object = {}
+       
+       let min_price = $("#max_price").attr("min")
+       let max_price = $("#max_price").val()
+   
+   
+       filter_object.min_price = min_price;
+       filter_object.max_price = max_price;
+   
+       $(".filter-checkbox").each(function(){
+           let filter_value = $(this).val()
+           let filter_key = $(this).data("filter")
+   
+           console.log("filter value: ", filter_value );
+           console.log("filter key: ", filter_key );
+   
+           filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key +']:checked')).map(function(element){
+               return element.value
+           })
+       })
+       console.log("Filter object:", filter_object );
+       $.ajax({
+           url: '/filter-products',
+           data: filter_object,
+           dataType: 'json',
+           beforeSend: function(){
+               console.log("sending data");
+           },
+           success: function(response){ 
+               console.log(response);
+               console.log("success");
+               $("#filtered-product").html(response.data)
+           }
+       })
+       $("#max_price").on("blur", function(){
+           console.log("clicked");
+           let min_price = $(this).attr("min")
+           let max_price= $(this).attr("max")
+           let current_price = $(this).val()
+   
+           console.log("current price is:", current_price);
+           console.log("current:", min_price);
+           console.log("current:", max_price);
+       })  
+   })  
+   })
+</script>
+   <!-- back to top start -->
+   <div class="progress-wrap">
+      <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+         <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+      </svg>
+   </div>
+   <!-- back to top end -->
+   
+
+   <!-- offcanvas area start -->
+   <div class="offcanvas__area">
+      <div class="offcanvas__wrapper">
+      <div class="offcanvas__close">
+         <button class="offcanvas__close-btn" id="offcanvas__close-btn">
+               <i class="fal fa-times"></i>
+         </button>
+      </div>
+      <div class="offcanvas__content">
+         <div class="offcanvas__logo mb-40">
+          
+               <img src="assets/img/logo/logo-white.png" alt="logo">
+               </a>
+         </div>
+         <div class="offcanvas__search mb-25">
+               <form action="#">
+                  <input type="text" placeholder="What are you searching for?">
+                  <button type="submit" ><i class="far fa-search"></i></button>
+               </form>
+         </div>
+         <div class="mobile-menu fix"></div>
+         <div class="offcanvas__action">
+
+         </div>
+      </div>
+      </div>
+   </div>
+   <!-- offcanvas area end -->      
+   <div class="body-overlay"></div>
+   <!-- offcanvas area end -->
+
+      <!-- cart-area-start -->
+      <section class="cart-area pt-120 pb-120">
+         <div class="container">
+            <div class="row">
+               <div class="col-12">
+                     <form action="#">
+                        <div class="table-content table-responsive">
+                           <table class="table">
+                                 <thead>
+                                    <tr>
+                                       <td class="custome-checkbox pl-30">
+                                          <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                          <label class="form-check-label" for="exampleCheckbox1"></label>
+                                       </td>
+                                       <th class="product-thumbnail">Images</th>
+                                       <th class="cart-product-name">Product</th>
+                                       <th class="product-price">Unit Price</th>
+                                       <th class="product-quantity">Quantity</th>
+                                       <th class="product-subtotal">Total</th>
+                                       <th class="product-refresh">Refresh</th>
+                                       <th class="product-remove">Remove</th>
+                                       
+                                       
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                       {% for product_id, item in cart_data.items %}
+                                    <tr>
+                                       <td class="custome-checkbox pl-30">
+                                          <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox2" value="">
+                                          <label class="form-check-label" for="exampleCheckbox2"></label>
+                                       </td>
+                                       <td class="product-thumbnail"><a href="{%url 'core:product-detail' item.pid%}"><img src="{{item.image}}" alt=""></a></td>
+                                       <td class="product-name"><a href="{%url 'core:product-detail' item.pid%}">{{item.title}}</a></td>
+                                       <td class="product-price"><span class="amount">₱ {{item.price|floatformat:2}}</span></td>
+                                       <td class="product-quantity">
+                                             <div class="" style="text-align: center;">
+                                                <div class="cart-plus-minus p-relative">
+                                             <input type="text" value="{{item.qty}}" class="product-qty-{{ product_id }}">
+                                             <div class="dec qtybutton">-</div>
+                                        <div class="inc qtybutton">+</div></div>
+   
+                                       </td>
+                                       <td class="product-subtotal"><span class="amount">₱ {% widthratio item.price 1 item.qty%}</span></td>
+                                       <td><button data-title="Update" class="update-product" data-product="{{ product_id }}">↻</button></td>
+                                       <td><button data-title="Remove" class="delete-product" data-product="{{ product_id }}"><i class="fa fa-times"></i></button></td>
+                                       
+                                    </tr> 
+                                    {%endfor%}
+                                 </tbody>
+                           </table>
+                        </div>
+                        <div class="row">
+                           <div class="col-12">
+                           </div>
+                        </div>
+                        <div class="row justify-content-end">
+                           <div class="col-md-5">
+                                 <div class="cart-page-total">
+                                    <h2>Cart totals</h2>
+                                    <ul class="mb-20">
+                                       <li>Subtotal <span>₱ {{cart_total_amount|floatformat:2}}</span></li>
+                                       <li>Shipping fee <span>₱ Fee</span></li>
+                                       <li>Total <span>₱ {{cart_total_amount|floatformat:2}}</span></li>
+                                    </ul>
+                                    {% if totalcartitems%}
+                                       <a class="tp-btn-h1" href="{% url 'core:checkout' %}">Proceed to checkout</a>
+                                    {%endif%}
+                                 </div>
+                           </div>
+                        </div>
+                     </form>
+               </div>
+            </div>
+         </div>
+      </section>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'partials/base.html' %}
+{% block content %}
+{% load static %}
+<title>{% block title %}Billie Moto | Sellers{% endblock %}</title>
+<script>
+    console.log("working fine");
+
+$("#comment_form").submit(function(e){
+    e.preventDefault();
+
+    $.ajax({
+        data: $(this).serialize(),
+
+        method: $(this).attr("method"),
+
+        url:$(this).attr("action"),
+
+        dataType: "json",
+
+        success: function(res){
+            console.log("comment Saved to db");
+
+            if(res.bool == true){
+                $("#review-res").html("Review Added Successfully.")
+                $(".hide-comment-form").hide()
+                $(".add-review").hide()
+            }
+        }
+    })
+})
+
+$(document).ready(function(){
+    $(".filter-checkbox, #price-filter-btn").on("click", function(){
+        console.log("clicked");
+
+        let filter_object = {}
+        
+        let min_price = $("#max_price").attr("min")
+        let max_price = $("#max_price").val()
+
+
+        filter_object.min_price = min_price;
+        filter_object.max_price = max_price;
+
+        $(".filter-checkbox").each(function(){
+            let filter_value = $(this).val()
+            let filter_key = $(this).data("filter")
+
+            console.log("filter value: ", filter_value );
+            console.log("filter key: ", filter_key );
+
+            filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key +']:checked')).map(function(element){
+                return element.value
+            })
+        })
+        console.log("Filter object:", filter_object );
+        $.ajax({
+            url: '/filter-products',
+            data: filter_object,
+            dataType: 'json',
+            beforeSend: function(){
+                console.log("sending data");
+            },
+            success: function(response){ 
+                console.log(response);
+                console.log("success");
+                $("#filtered-product").html(response.data)
+            }
+        })
+        $("#max_price").on("blur", function(){
+            console.log("clicked");
+            let min_price = $(this).attr("min")
+            let max_price= $(this).attr("max")
+            let current_price = $(this).val()
+    
+            console.log("current price is:", current_price);
+            console.log("current:", min_price);
+            console.log("current:", max_price);
+        })  
+    })  
+})
+
+
+
+$(".add-to-cart-btn").on("click", function(){  
+
+    let this_val = $(this)
+    let index = this_val.attr("data-index")
+
+
+    let quantity = $(".product-quantity-" + index).val()
+    let product_title = $(".product-title-" + index).val()
+    let product_id = $(".product-id-" + index).val()
+    let product_price = $(".current-product-price-" + index).text()
+    let product_pid = $(".product-pid-" + index).val()
+    let product_image = $(".product-image-" + index).val()
+
+    console.log("quantity ", quantity);
+    console.log("title ", product_title);
+    console.log("id ", product_id);
+    console.log("pid ", product_pid);
+    console.log("price ", product_price);
+    console.log("image ", product_image);
+    console.log("index ", index);
+    console.log("current element ", this_val);
+
+    $.ajax({
+        url: '/add-to-cart',
+        data: {
+            'id': product_id,
+            'pid': product_pid,
+            'image': product_image,
+            'qty': quantity,
+            'title': product_title,
+            'price': product_price,
+        },
+        dataType: 'json',   
+        beforeSend: function(){
+            console.log("adding....")
+        },
+        success: function(response){
+            this_val.html("Added ✔") 
+            console.log("added...")
+            $(".cart-items-count").text(response.totalcartitems)
+        }
+    })
+})
+
+
+
+
+// $("#add-to-cart-btn").on("click", function(){
+//     let quantity = $("#product-quantity").val()
+//     let product_title = $(".product-title").val()
+//     let product_id = $(".product-id").val()
+//     let product_price = $("#current-product-price").text()
+//     let this_val = $(this)
+
+//     console.log("quantity ", quantity);
+//     console.log("title ", product_title);
+//     console.log("id ", product_id);
+//     console.log("price ", product_price);
+//     console.log("current element ", this_val);
+
+//     $.ajax({
+//         url: '/add-to-cart',
+//         data: {
+//             'id': product_id,
+//             'qty': quantity,
+//             'title': product_title,
+//             'price': product_price,
+//         },
+//         dataType: 'json',   
+//         beforeSend: function(){
+//             console.log("adding....")
+//         },
+//         success: function(response){
+//             this_val.html("Product added to cart") 
+//             console.log("added...")
+//             $(".cart-items-count").text(response.totalcartitems)
+//         }
+//     })
+// })
+
+
+</script>
+<main>
+    <!-- services-area-start -->
+    <div class="services-area pt-30 light-bg-s pb-40">
+        <div class="container">
+            <h2>Vendor List</h2>
+            <div class="row mt-40">
+                {% for v in vendors %}
+                <div class="col-xl-4 col-lg-4 col-md-6">
+                    <div class="services-item mb-30">
+                        <div class="services-icon mb-25">
+                            <a href="{% url 'core:vendor-detail' v.vid %}">
+                                <img src="{{ v.image.url }}" style="width: 120px; height: 120px;">
+                            </a>
+                        </div>
+                        <h6><a href="{% url 'core:vendor-detail' v.vid %}">{{ v.title }}</a></h6>
+                        <div style="display: flex;
+                        align-items: center;">
+                        <i class="fal fa-map-marker-alt"> </i> &nbsp;
+                        <p style="color: black;">{{ v.address }}</p>
+                        </div>
+
+                        <div style="display: flex;
+                        align-items: center;">
+                            <i class="fal fa-phone-alt"> </i> &nbsp;
+                            <p style="color: rgb(234, 84, 85)">{{ v.contact }}</p>
+                        </div>
+                        <p style="color: gray;"> Since: {{ v.date|date:"M Y" }}</p><br>
+                        <a href="{% url 'core:vendor-detail' v.vid %}" class="tp-in-btn w-100">View Store</a>
+                        <div class="s-count-number">
+                            <span style="font-size: 35px; color: rgb(45, 64, 89);">{{ v.product.all.count }} Products</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,329 @@
+{% extends 'partials/base.html' %}
+{% block content %}
+{% load static %}
+<script>
+    $('#addReviewModal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var csrfToken = "{{ csrf_token }}";
+        modal.find('#comment_form input[name="csrfmiddlewaretoken"]').val(csrfToken);
+    });
+</script>
+<title>{% block title %}Billie Moto | Order{% endblock %}</title>
+    <main class="main pages">
+
+        <div class="page-content pt-100 pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                      <li class="nav-item">
+                                        <a style="font-size:large ;"class="nav-tabs single-category p-relative mb-10 single-widget-category"  href="{% url 'core:dashboard' %}"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                      </li>
+                                      <li class="nav-item">
+                                        <a style="font-size:large ;" class="nav-tabs active single-category p-relative mb-10 single-widget-category" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                      </li>
+                                      {% comment %} <li class="nav-item">
+                                        <a class="nav-tabs single-category p-relative mb-10 single-widget-category" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                      </li>
+                                      <li class="nav-item">
+                                        <a class="nav-tabs single-category p-relative mb-10 single-widget-category" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                      </li>
+                                      <li class "nav-item">
+                                        <a class="nav-tabs single-category p-relative mb-10 single-widget-category" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
+                                      </li> {% endcomment %}
+
+                                    </ul>
+                                  </div>
+
+                            </div>
+                            <div class="col-md-9">
+                                <div class="tab-content account dashboard-content pl-50">
+                                    <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="mb-0" style="color: #F07B3F;">Hello {{request.user|title}}! </h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>,<br> manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="mb-0" style="color: #F07B3F;">Your Orders</h3>
+                                            </div>
+                                            {% comment %} <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Invoice</th>
+                                                                <th>Image</th>
+                                                                <th>Title</th>
+                                                                <th>Price</th>
+                                                                <th>Quantity</th>
+                                                                <th>Total</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {%for o in order_items%}
+                                                            <tr>
+                                                                <td>ORDER_ID-{{o.id}}</td>
+                                                                <td><img src="{{o.image}}" style="width: 45px; height: 45px; border: 1.2px solid gray;" alt="product-img"></td>
+                                                                <td>{{o.item}}</td>
+                                                                <td> ₱ {{o.price}}</td>
+                                                                <td>{{o.qty}}</td>
+                                                                <td> ₱ {{o.total}}</td>
+
+                                                            </tr>
+
+                                                            {%endfor%}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div> {% endcomment %}
+                                            <div class="card-body">
+                                                {%for o in order_items%}
+                                                <h5 style="color:darkcyan;">Order ID: {{o.id}}</h5>
+                                                <article class="card">
+                                                    <div class="card-body row">
+                                                        <div class="col"> <strong>Item:</strong> <br><img src="{{o.image}}" style="width: 90px; height: 90px; border: 1px solid gray;" alt="product-img"> </div>
+                                                        <div class="col"> <strong>Order Date:</strong> <br>{{o.order_date}} </div>
+                                                        <div class="col"> <strong>Product:</strong> <br>  {{o.item}} </div>
+                                                        <div class="col"> <strong>Quantity:</strong> <br>  {{o.qty}} </div>
+                                                        <div class="col"> <strong>Order Total:</strong> <br>  ₱ {{o.total}} </div>
+                                                        {% comment %} <div class="col"> <strong>Status:</strong> <br> {{o.product_status}} </div> {% endcomment %}
+                                                        <div class="col"> <strong>Payment:</strong> <br> 
+                                                            {%if o.paid_status%}
+                                                            <td><span class="text-success">✔</span></td>
+                                                            {%else%}
+                                                            <td><span class="text-danger">✘</span></td>
+                                                            {%endif%} 
+                                                            <td>
+                                                                
+                                                            </td>
+                                                        </div> 
+                                                        {% if o.cancel_order %}
+                                                            <button class="btn btn-secondary" style="margin-top: 10px;" disabled>Order Cancelled</button>
+                                                        {% elif o.product_status == 'Processing' or o.product_status == 'Preparing' %}
+                                                            <button class="btn btn-warning cancel-order" style="margin-top: 10px;" data-order-item-id="{{ o.id }}">Cancel Order</button>
+                                                        {% endif %}
+                                              
+                                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                                        <script>
+                                                            $(document).ready(function () {
+                                                                $('.cancel-order').on('click', function () {
+                                                                    var orderItemId = $(this).data('order-item-id');
+                                                                    $.ajax({
+                                                                        url: '/cancel_order/' + orderItemId + '/',
+                                                                        method: 'POST',
+                                                                        data: {
+                                                                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                                                                        },
+                                                                        success: function (response) {
+                                                                            // Handle success - Maybe show a success message or update UI
+                                                                            console.log(response.message);
+                                                                            location.reload();
+                                                                            // You might want to refresh the page or update the UI accordingly
+                                                                        },
+                                                                        error: function (error) {
+                                                                            // Handle error - Maybe show an error message
+                                                                            console.error('Error:', error);
+                                                                        }
+                                                                    });
+                                                                });
+                                                            });
+                                                        </script>
+                                                           
+
+                                                            <!-- <div class="col">
+                                                                <strong>Add review:</strong>
+                                                                <br>
+                                                                <button class="btn btn-primary" data-toggle="modal" data-target="#addReviewModal{{ product.id }}">
+                                                                    Add Review
+                                                                </button>
+                                                            </div> -->
+
+   <!-- {% for product in products %}                                                    -->
+       <!-- Modal Structure -->
+<!-- Review modal for this product -->
+<div class="modal fade" id="addReviewModal{{ product.id }}" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel{{ product.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addReviewModalLabel{{ product.id }}">Add Review for {{ product.name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Review form -->
+                <form action="{% url 'core:ajax_add_review' product.id %}" method="POST" class="comment_form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="review">Review</label>
+                        <textarea class="form-control" id="review" name="review" placeholder="Write a review"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="rating">Rating</label>
+                        <!-- Your rating input field -->
+                        <!-- Example: -->
+                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- {% endfor %} -->
+                                                    </div>
+                                                </article>
+                                                <div class="track">
+                                                    {%if o.product_status == 'Processing' %}
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Placed</span> </div>
+                                                    <div class="step "> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Preparing to Ship</span> </div>
+                                                    <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> In Transit </span> </div>
+                                                    <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                                    {%elif o.product_status == 'Preparing' %}
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Placed</span> </div>
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Preparing to Ship</span> </div>
+                                                    <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> In Transit </span> </div>
+                                                    <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                                    {%elif o.product_status == 'Shipped' %}
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Placed</span> </div>
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Preparing to Ship</span> </div>
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> In Transit </span> </div>
+                                                    <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                                    {%elif o.product_status == 'Delivered' %}
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Placed</span> </div>
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Preparing to Ship</span> </div>
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> In Transit </span> </div>
+                                                    <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                                    {%endif%}
+                                                    <hr>
+                                                </div>
+                                                <li class="col-md-4">
+                                                </li>
+                                                <hr>
+
+                                                  {%endfor%}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="mb-0" style="color: #F07B3F;">Orders tracking</h3>
+                                            </div>
+                                            <div class="card-body contact-from-area">
+                                                <p>To track your order, please enter your OrderID in the box below and press "Track".  Your OrderID can be seen on both your receipt and in the confirmation email you received.</p>
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <form class="contact-form-style mt-30 mb-50" action="#" method="post">
+                                                            <div class="input-style mb-20">
+                                                                <label>Order ID</label>
+                                                                <input name="order-id" placeholder="Found in your order confirmation email" type="text">
+                                                            </div>
+                                                            <div class="input-style mb-20">
+                                                                <label>Billing email</label>
+                                                                <input name="billing-email" placeholder="Email you used during checkout" type="email">
+                                                            </div>
+                                                            <button class="submit submit-auto-width" type="submit">Track</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="card mb-3 mb-lg-0">
+                                                    <div class="card-header">
+                                                        <h3 class="mb-0" style="color: #F07B3F;">Billing Address</h3>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address>3522 Interstate<br> 75 Business Spur,<br> Sault Ste. <br>Marie, MI 49783</address>
+                                                        <p>New York</p>
+                                                        <a href="#" class="btn-small">Edit</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0" style="color: #F07B3F;">Shipping Address</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address>4299 Express Lane<br>
+                                                            Sarasota, <br>FL 34249 USA <br>Phone: 1.941.227.4444</address>
+                                                        <p>Sarasota</p>
+                                                        <a href="#" class="btn-small">Edit</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Account Details</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>Already have an account? <a href="page-login.html">Log in instead!</a></p>
+                                                <form method="post" name="enq">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label>First Name <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="name" type="text">
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Last Name <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="phone">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Display Name <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="dname" type="text">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Email Address <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="email" type="email">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Current Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="password" type="password">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>New Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="npassword" type="password">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Confirm Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control" name="cpassword" type="password">
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Save Change</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<!-- Mirrored from demosc.chinaz.net/Files/DownLoad/moban/202110/moban5797/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Nov 2021 05:16:09 GMT -->
+</html>
+{% endblock %}
