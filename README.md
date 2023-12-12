@@ -12,7 +12,7 @@ just run python manage.py runserver
 
 ## Credits
 
-Admin Dashboard AppSeed.com 
+Admin Dashboard appseed.us
 
 ## Developed using 
 
