@@ -26,13 +26,15 @@ Admin Dashboard AppSeed.com
 
 ## Preview
 
+   
+ ![alt text](assests/images/1.png)
+    ![alt text](assests/images/2.png)
+    ![alt text](assests/images/3.png)
+    ![alt text](assests/images/4.png)
+    ![alt text](assests/images/5.png)
+    ![alt text](assests/images/6.png)
+  
 
-    ![alt text](static\assets\css\images\1.png)
-    ![alt text](static\assets\css\images\2.png)
-    ![alt text](static\assets\css\images\3.png)
-    ![alt text](static\assets\css\images\4.png)
-    ![alt text](static\assets\css\images\5.png)
-    ![alt text](static\assets\css\images\6.png)
 
 
 ## Features
