@@ -29,14 +29,14 @@ vious sections are the bare minimum, and your project will ultimately determine 
 
 ## Features
 
-Buyer
-Seller
-Wishlist
-Add to cart
-Register as seller
-Add edit delete products
-Monitor product stocks
-Monitor product sales
+- Buyer
+- Seller
+- Wishlist
+- Add to cart
+- Register as seller
+- Add edit delete products
+- Monitor product stocks
+- Monitor product sales
 
 
 
