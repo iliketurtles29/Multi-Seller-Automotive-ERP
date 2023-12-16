@@ -6,10 +6,6 @@ from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
-from paypal.standard.forms import PayPalPaymentsForm
 from django.core import serializers
 from userauths.forms import VendorRegistrationForm
 from django.shortcuts import get_object_or_404
@@ -20,9 +16,10 @@ from django.db.models import Count
 from django.db import transaction
 from django.utils.html import strip_tags
 from django.core.mail import send_mail
-
-
-
+# from django.urls import reverse
+# from django.conf import settings
+# from django.views.decorators.csrf import csrf_exempt
+# from paypal.standard.forms import PayPalPaymentsForm
 
 
 def index(request):

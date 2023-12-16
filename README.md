@@ -8,7 +8,8 @@
 
 ## Installation
 
-just run python manage.py runserver
+just run 
+python manage.py runserver
 
 ## Credits
 

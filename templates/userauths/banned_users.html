@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>{% block title %}Billie Moto | Banned{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <style>
+        /* CSS to style the body and the div */
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f5f7; /* Set your desired background color for the body */
+        }
+        .content {
+            text-align: center;
+            background-color: #f4f5f7; /* Set the same background color for the div */
+            padding: 20px; /* Add padding for better visibility */
+        }
+        /* Other styles for the content inside the div */
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="team-area light-bg-s pt-70 pb-40">
+            <div class="row mb-35">
+                <div class="col-xl-12">
+                    <div class="abs-section-title text-center">
+                        <span>BILLIE MOTO TEAM</span>
+                        <h4>Banned</h4>
+                        <p>Your account is now banned from using Billie Moto</p>
+                        <a class="tp-in-btn w-100" href="{% url 'core:index' %}">Go back</a>
+                    </div>
+                </div>       
+            </div>
+        </div>
+    </div>
+</body>
+</html>

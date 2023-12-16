@@ -6,6 +6,8 @@ from django.conf import settings
 from userauths.models import Profile, User
 from userauths.forms import VendorRegistrationForm, ProfileForm
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+
 
 #User = settings.AUTH_USER_MODEL
 # Create your views here.
@@ -32,6 +34,8 @@ def register_view(request):
     }
     return render(request, "userauths/sign-up.html", context)
 
+User = get_user_model()
+
 def login_view(request):
     if request.user.is_authenticated:
         messages.warning(request, "Hey you are already logged in.")
@@ -43,17 +47,22 @@ def login_view(request):
 
         try:
             user = User.objects.get(email=email)
+            if not user.is_active:
+                return render(request, "userauths/banned_users.html")  # Redirect to banned users page
+
             user = authenticate(request, email=email, password=password)
 
             if user is not None:
-                login(request, user)
-                messages.success(request, "You're logged in")
-                return redirect("core:index")
-            
+                if user.is_active:  # Check if the user is active before logging in
+                    login(request, user)
+                    messages.success(request, "You're logged in")
+                    return redirect("core:index")
+                else:
+                    return render(request, "userauths/banned_users.html")  # Redirect to banned users page if not active
             else:
                 messages.warning(request, "User does not exist or Password incorrect")
-        except:
-            messages.warning(request, f"User { email } does not exist")
+        except User.DoesNotExist:
+            messages.warning(request, f"User {email} does not exist")
 
     return render(request, "userauths/sign-in.html")
 
