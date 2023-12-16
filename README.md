@@ -1,12 +1,12 @@
 # Multi Seller ERP
-# <Your-Project-Title>
+
 
 ## Description
 
 - Third year Information Technology 1st Semester Project
 - Developed using Python - Django Framework, SQLite3, HTML-CSS-JavaScript.
 
-<<<<<<< HEAD
+
 ## Installation
 
 just run 
