@@ -1,5 +1,5 @@
 # Multi Seller ERP
-
+###### © Alvin R. of Billie Motto 
 
 ## Description
 
@@ -9,7 +9,8 @@
 
 ## Installation
 
-just run 
+python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver
 
 ## Credits
@@ -30,11 +31,6 @@ Admin Dashboard appseed.us
 
    <img src="assests/images/1.png" width="500"> <img src="assests/images/2.png" width="500"> <img src="assests/images/3.png" width="500"> <img src="assests/images/4.png" width="500"> <img src="assests/images/5.png" width="500"> <img src="assests/images/6.png" width="500">
 
-
-  
-
-
-
 ## Features
 
 - Buyer
@@ -45,7 +41,5 @@ Admin Dashboard appseed.us
 - Add edit delete products
 - Monitor product stocks
 - Monitor product sales
-
-
 
 ### © Alvin R.
