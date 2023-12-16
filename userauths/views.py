@@ -87,6 +87,7 @@ def register_vendor(request):
         form = VendorRegistrationForm()
     return render(request, 'userauths/vendor_registration.html', {'form': form})
 
+
 def profile_update(request):
     profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
